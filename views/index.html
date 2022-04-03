@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ua">
+<head>
+    <meta charset="UTF-8">
+    <!-- <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="../style/animate.css"> -->
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <link href="animate.css" rel="stylesheet" type="text/css">
+    <title>Dz</title>
+</head>
+<div class="main">
+    <a href="/add">Добавить задачу</a>
+</div>
+    <div id="abount" class="wow bounceInDown">
+        <div class="cubs">
+            <div id="cub">
+                <h2 id="jstext">{{Text}}</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Что нужно сделать</th>
+                                <th scope="col">Статус процесса</th>
+                                <th scope="col">Дата</th>
+                            </tr>
+                        </thead>
+                        <tbody id="container-table">
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+    </div>
+
+    <form id="form" action="">
+        <input id="input" autocomplete="off" /><button>Send</button>
+    </form>
+    <!-- <script src="script/script.js"></script> -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+
+        var form = document.getElementById('form');
+        var input = document.getElementById('input');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (input.value) {
+            socket.emit("SendDel", input.value);
+            input.value = '';
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            socket.emit("CreateTable");
+        });
+
+        var socket = io();
+        socket.on('CreateTable', function(id, text, process, date) {
+            var item = document.createElement('tr');
+            var toitem = document.createElement('th');
+            var foitem = document.createElement('td');
+            var friitem = document.createElement('td');
+            var xiitem = document.createElement('td');
+            var button = document.createElement('button');
+            var abutton = document.createElement('button');
+            button.setAttribute("onclick", "Sendtext(" + id + ")");
+            abutton.setAttribute("onclick", "SendFin(" + id + ")");
+            button.setAttribute("class", "button-dell");
+            abutton.setAttribute("class", "button-fin");
+            
+            toitem.textContent = id;
+            foitem.textContent = text;
+            if(process == 0) {
+                xiitem.setAttribute("class", "dell");
+                xiitem.textContent = "Удалено";
+            }
+            else if(process == 1){
+                xiitem.setAttribute("class", "fof"); 
+                xiitem.textContent = "В процессе";
+            }
+            else if(process == 2) {
+                xiitem.setAttribute("class", "vukonano"); 
+                xiitem.textContent = "Выконано";
+            }
+            friitem.textContent = date;
+            button.textContent = "Удалить";
+            abutton.textContent = "Відновити";
+
+            document.getElementById("container-table").appendChild(item);
+            item.prepend(toitem);
+            item.append(foitem);
+            item.append(xiitem);
+            item.append(friitem);
+            item.append(abutton); 
+            item.append(button); 
+        });
+
+        async function Sendtext(id) {
+            console.log(id);
+            socket.emit("DeleteTableMySQL", id);
+            await SendTexthtml("Данні були обновленні");
+        }
+
+        async function SendFin(id) {
+            console.log(id);
+            socket.emit("SaveTableMySQL", id);
+            await SendTexthtml("Данні були обновленні");
+        }
+
+        async function SendTexthtml(message) {
+            let text = document.getElementById("jstext");
+            text.style.transition = "all 2s";
+            text.style.display = "contents";
+            text.textContent = message;
+            await sleep(4*1000)
+            text.style.transition = "all 2s";
+            text.style.display = "none";
+            location.reload();
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/wow/0.1.12/wow.min.js"></script>
+<script>new WOW().init();</script>
+</body>
+</html>

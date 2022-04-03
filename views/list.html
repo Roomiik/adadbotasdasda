@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ua">
+<head>
+    <meta charset="UTF-8">
+    <link href="list.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Rock+Salt' rel='stylesheet' type='text/css'>
+    <title>Dz</title>
+</head>
+<body>
+        <div id="container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">ПІБ Викладача</th>
+                            <th scope="col">Урок</th>
+                            <th scope="col">Коли задали</th>
+                            <th scope="col">На коли задали</th>
+                            <th scope="col">Що потрібно виконати</th>
+                        </tr>
+                    </thead>
+                    <tbody id="container-table">
+                    </tbody>
+                </table>
+        </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        /*document.addEventListener("DOMContentLoaded", function() {
+            socket.emit('CreateTableToList');
+        });*/
+        var socket = io();
+
+        socket.on("Text", function(message) {
+            socket.emit('CreateTableToList', message, a);
+            console.log(6);
+        });
+        
+        socket.on("CreateTableToList", function(id, pib, lieas, todate, fridate, res) {
+            console.log(1);
+            var item = document.createElement('tr');
+            var toitem = document.createElement('th');
+            var foitem = document.createElement('td');
+            var friitem = document.createElement('td');
+            var aitem = document.createElement('td');
+            var ditem = document.createElement('td');
+            var citem = document.createElement('td');
+            var nitem = document.createElement('td');
+
+            foitem.textContent = id;
+            friitem.textContent = pib;
+            aitem.textContent = lieas;
+            ditem.textContent = todate;
+            citem.textContent = fridate;
+            nitem.textContent = res;
+
+            document.getElementById("container-table").appendChild(item);
+            item.prepend(toitem);
+            item.append(foitem);
+            item.append(friitem);
+            item.append(aitem);
+            item.append(ditem);
+            item.append(citem);
+            item.append(nitem);
+        });
+    </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/wow/0.1.12/wow.min.js"></script>
+<script>new WOW().init();</script>
+</body>
+</html>
