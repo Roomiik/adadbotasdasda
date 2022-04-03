@@ -1,0 +1,17 @@
+body {
+    background: linear-gradient(136deg, hsl(88, 72%, 52%) 0%, hsl(120, 79%, 59%) 100%);
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.cubs {
+    margin-left: 70%;
+    margin-top: 7%;
+    border-radius: 5px;
+    border: 20px solid #000;
+    
+    background: rgba(190, 191, 195, .8);
+    text-align: center;
+    overflow: auto;
+}
